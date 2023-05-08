@@ -1018,6 +1018,12 @@ func (vc *vcursorImpl) ExecuteVSchema(ctx context.Context, keyspace string, vsch
 	}
 
 	ks := srvVschema.Keyspaces[ksName]
+
+	errSC := SchemaCheck(vc, ctx, ksName, vschemaDDL)
+	if errSC != nil {
+		return errSC
+	}
+
 	ks, err := topotools.ApplyVSchemaDDL(ksName, ks, vschemaDDL)
 
 	if err != nil {
